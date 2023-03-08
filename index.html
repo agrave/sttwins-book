@@ -15,6 +15,15 @@
     type="image/x-icon"
     href="https://cdn.sttwins.com/favicon.ico"
   />
+  <style>
+    .row {
+      display: table;
+      border-spacing: 10px;
+    }
+    .column {
+      display: table-cell;
+    }
+  </style>
   <title>Адресная книга Сейнт-Твинс</title>
 </head>
 <body>
@@ -49,7 +58,7 @@
         },
         columns: [{ data: "title" }, { data: "address" }, { data: "type" }],
         paging: false,
-        dom:'<fit'
+        dom: '<"row"<"column"f><"column"i>>t',
       });
       $("#addressBook_filter").css({ float: "left" });
     });
