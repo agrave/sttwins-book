@@ -29,7 +29,11 @@
 <body>
   <div style="margin: 3em">
     <h1>Адресная книга Сейнт-Твинс</h1>
-    <table id="addressBook" class="table table-striped dataTable" style="width: 100%">
+    <table
+      id="addressBook"
+      class="table table-striped dataTable"
+      style="width: 100%"
+    >
       <thead>
         <tr>
           <th></th>
@@ -53,10 +57,22 @@
                 );
               }
             }
+            data.forEach(
+              (item) => (item.title_filter = item.title.replace(/[,”’]/g, ""))
+            );
             return data;
           },
         },
-        columns: [{ data: "title" }, { data: "address" }, { data: "type" }],
+        columns: [
+          {
+            data: {
+              _: "title",
+              filter: "title_filter",
+            },
+          },
+          { data: "address" },
+          { data: "type" },
+        ],
         paging: false,
         dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6"i>><"row"t>',
       });
