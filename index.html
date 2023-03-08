@@ -11,25 +11,25 @@
     href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.css"
   />
   <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/1.13.3/css/dataTables.bootstrap5.min.css"
+  />
+
+  <link
     rel="icon"
     type="image/x-icon"
     href="https://cdn.sttwins.com/favicon.ico"
   />
-  <style>
-    .row {
-      display: table;
-      border-spacing: 10px;
-    }
-    .column {
-      display: table-cell;
-    }
-  </style>
   <title>Адресная книга Сейнт-Твинс</title>
 </head>
 <body>
   <div style="margin: 3em">
     <h1>Адресная книга Сейнт-Твинс</h1>
-    <table id="addressBook" class="display" style="width: 100%">
+    <table id="addressBook" class="table table-striped dataTable" style="width: 100%">
       <thead>
         <tr>
           <th></th>
@@ -58,9 +58,10 @@
         },
         columns: [{ data: "title" }, { data: "address" }, { data: "type" }],
         paging: false,
-        dom: '<"row"<"column"f><"column"i>>t',
+        dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6"i>><"row"t>',
       });
       $("#addressBook_filter").css({ float: "left" });
+      $("#addressBook_info").css({ float: "right" });
     });
   </script>
   <script></script>
