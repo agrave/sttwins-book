@@ -1,0 +1,48 @@
+<head>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+    integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+  <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.css"
+  />
+</head>
+<body>
+  <div style="margin: 3em">
+    <h1>SaintTwins Address Book</h1>
+    <table id="addressBook" class="display" style="width: 100%">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Адресс</th>
+          <th>Тип</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <script>
+    $(document).ready(function () {
+      $("#addressBook").DataTable({
+        ajax: {
+          url: "https://cdn.sttwins.com/static/book/data_ru_new.json",
+          dataSrc: function (json) {
+            const data = [];
+            for (const type in json) {
+              for (char in json[type]) {
+                data.push(
+                  ...json[type][char].map((item) => ({ ...item, type }))
+                );
+              }
+            }
+            return data;
+          },
+        },
+        columns: [{ data: "title" }, { data: "address" }, { data: "type" }],
+      });
+    });
+  </script>
+</body>
