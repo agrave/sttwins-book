@@ -1,39 +1,69 @@
 <head>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
-    integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  ></script>
-  <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.css"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdn.datatables.net/1.13.3/css/dataTables.bootstrap5.min.css"
-  />
 
-  <link
-    rel="icon"
-    type="image/x-icon"
-    href="https://cdn.sttwins.com/favicon.ico"
-  />
-  <title>Адресная книга Сейнт-Твинс</title>
+  <link rel="icon" type="image/x-icon" href="https://cdn.sttwins.com/favicon.ico" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+    integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"
+    integrity="sha512-nlp9/l96/EpjYBx7EP7pGASVXNe80hGhYAUrjeXnu/fyF5Py0/RXav4BBNs7n5Hx1WFhOEOWSAVjGeC3oKxDVQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/dataTables.bootstrap5.min.css" />
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/css/bootstrap5-toggle.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/js/bootstrap5-toggle.jquery.min.js"></script>
+  <script src="./script/table.js"></script>
+  <script src="./script/utils.js"></script>
+
+  <title id="title">Адресная книга Сейнт-Твинс</title>
+
+  <script>
+    var header, dataUrl
+    $(document).ready(function () {
+      let lang = Cookies.get('lang')
+      lang ? setLanguage(lang) : setLanguage('UA')
+      $('#language-toggle').prop('checked', Cookies.get('lang') === 'UA')
+      const a = $('#language-toggle').bootstrapToggle({
+        onlabel: 'UA',
+        offlabel: 'RU',
+        onstyle: 'secondary',
+        offstyle: 'secondary',
+      })
+      initTable(dataUrl)
+    });
+    $(function () {
+      $('#language-toggle').change(function () {
+        if ($(this).prop('checked')) {
+          setLanguage('UA')
+        } else {
+          setLanguage('RU')
+        }
+        updateTable(dataUrl)
+      })
+    })
+  </script>
 </head>
+
 <body>
   <div style="margin: 3em">
-    <h1>Адресная книга Сейнт-Твинс</h1>
-    <table
-      id="addressBook"
-      class="table table-striped dataTable"
-      style="width: 100%"
-    >
+    <div class="container">
+      <div class="row">
+        <div class="col-md-auto">
+          <h1 id="header">Адресная книга Сейнт-Твинс</h1>
+        </div>
+        <div class="col">
+
+        </div>
+        <div class="col-md-auto">
+          <input type="checkbox" id="language-toggle">
+        </div>
+      </div>
+    </div>
+    <table id="addressBook" class="table table-striped dataTable" style="width: 100%">
       <thead>
         <tr>
           <th></th>
@@ -44,41 +74,21 @@
     </table>
   </div>
   <script>
-    $(document).ready(function () {
-      $("#addressBook").DataTable({
-        ajax: {
-          url: "https://cdn.sttwins.com/static/book/data_ua_new.json",
-          dataSrc: function (json) {
-            const data = [];
-            for (const type in json) {
-              for (char in json[type]) {
-                data.push(
-                  ...json[type][char].map((item) => ({ ...item, type }))
-                );
-              }
-            }
-            data.forEach(
-              (item) => (item.title_filter = item.title.replace(/[,”’]/g, ""))
-            );
-            return data;
-          },
-        },
-        columns: [
-          {
-            data: {
-              _: "title",
-              filter: "title_filter",
-            },
-          },
-          { data: "address" },
-          { data: "type" },
-        ],
-        paging: false,
-        dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6"i>><"row"t>',
-      });
-      $("#addressBook_filter").css({ float: "left" });
-      $("#addressBook_info").css({ float: "right" });
-    });
+    function setLanguage(lang) {
+      Cookies.set('lang', lang, { expires: 1 })
+      switch (lang) {
+        case 'RU':
+          header = "Адресная книга Сейнт-Твинс"
+          dataUrl = "https://cdn.sttwins.com/static/book/data_ru_new.json"
+          break;
+        case 'UA':
+          header = "Адресна книга Сейнт-Твінс"
+          dataUrl = "https://cdn.sttwins.com/static/book/data_ua_new.json"
+          break;
+      }
+      $('#header').html(header)
+      $('#title').html(header)
+    }
   </script>
   <script></script>
 </body>
