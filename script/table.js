@@ -18,6 +18,11 @@ function initTable(url) {
     },
     columns: [
       {
+        render: function (data, type, row) {
+          return `<button type="btn" class="btn btn-outline-secondary"">Copy</button>`;
+        }
+      },
+      {
         data: {
           _: "title",
           filter: "title_filter",
@@ -29,10 +34,22 @@ function initTable(url) {
     paging: false,
     dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6"i>><"row"t>',
   });
+
+  table.on('click', 'tbody tr', function () {
+    let data = table.row(this).data();
+    const strToClipboard = data.title + ' ' + data.address
+
+    const $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val(strToClipboard).select();
+    document.execCommand("copy");
+    $temp.remove();
+  });
+  
   $("#addressBook_filter").css({ float: "left" });
   $("#addressBook_info").css({ float: "right" });
 }
 
-function updateTable(url){
-    table.ajax.url(url).load();
+function updateTable(url) {
+  table.ajax.url(url).load();
 }
