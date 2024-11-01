@@ -1,4 +1,6 @@
 var table
+const copyIcon = '<img width="12" height="12" src="https://img.icons8.com/ios-glyphs/30/copy-2.png" alt="copy-2"/>'
+
 function initTable(url) {
   table = $("#addressBook").DataTable({
     ajax: {
@@ -19,7 +21,7 @@ function initTable(url) {
     columns: [
       {
         render: function (data, type, row) {
-          return `<button type="btn" class="btn btn-outline-secondary"">Copy</button>`;
+          return `<button type="btn" class="btn btn-outline-secondary"">${copyIcon}</button>`;
         }
       },
       {
